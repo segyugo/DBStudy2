@@ -2,8 +2,7 @@ package hello.itemservice.config;
 
 
 import hello.itemservice.repository.ItemRepository;
-import hello.itemservice.repository.jdbcTemplateItemRepositoryV1.JdbcTemplateItemRepositoryV2;
-import hello.itemservice.repository.jdbcTemplateItemRepositoryV1.JdbcTemplateItemRepositoryV3;
+import hello.itemservice.repository.jdbcTemplateItemRepository.JdbcTemplateItemRepositoryV3;
 import hello.itemservice.service.ItemService;
 import hello.itemservice.service.ItemServiceV1;
 import lombok.RequiredArgsConstructor;

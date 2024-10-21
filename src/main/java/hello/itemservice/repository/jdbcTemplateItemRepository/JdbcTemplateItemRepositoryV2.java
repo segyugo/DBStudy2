@@ -1,4 +1,4 @@
-package hello.itemservice.repository.jdbcTemplateItemRepositoryV1;
+package hello.itemservice.repository.jdbcTemplateItemRepository;
 
 import hello.itemservice.domain.Item;
 import hello.itemservice.repository.ItemRepository;
@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -24,29 +23,31 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
+public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
 
     private final NamedParameterJdbcTemplate template;
-    private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateItemRepositoryV3(DataSource dataSource) {
+    public JdbcTemplateItemRepositoryV2(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("item")
-                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Item save(Item item) {
+        String sql = "insert into item (item_name, price, quantity)"
+                + "values (:itemName, :price, :quantity)";
+
         SqlParameterSource param = new BeanPropertySqlParameterSource(item);
-        Number key = jdbcInsert.executeAndReturnKey(param);
-        item.setId(key.longValue());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(sql, param, keyHolder);
+
+        long key = keyHolder.getKey().longValue();
+        item.setId(key);
         return item;
     }
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        String sql = "update item set item_name=:itemName, price=:price, quantity=:quantity " +
+        String sql = "update item set item_name=?, price=?, quantity=?" +
                      "where id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource()
