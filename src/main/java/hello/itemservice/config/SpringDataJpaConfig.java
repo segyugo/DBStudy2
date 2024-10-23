@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManager;
 @Configuration
 @RequiredArgsConstructor
+
+
 public class SpringDataJpaConfig {
     private final SpringDataJpaItemRepository springDataJpaItemRepository;
     @Bean

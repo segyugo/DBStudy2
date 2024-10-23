@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 @Transactional
@@ -42,7 +43,6 @@ public class JpaItemRepositoryV2 implements ItemRepository {
         String itemName = cond.getItemName();
         Integer maxPrice = cond.getMaxPrice();
         if (StringUtils.hasText(itemName) && maxPrice != null) {
-//return repository.findByItemNameLikeAndPriceLessThanEqual("%" + itemName +"%", maxPrice);
             return repository.findItems("%" + itemName + "%", maxPrice);
         } else if (StringUtils.hasText(itemName)) {
             return repository.findByItemNameLike("%" + itemName + "%");
